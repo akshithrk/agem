@@ -7,6 +7,7 @@
 Training script for permute MNIST experiment.
 """
 from __future__ import print_function
+
 import argparse
 import os
 import sys
@@ -16,10 +17,9 @@ import keras
 
 import datetime
 import numpy as np
-# import tensorflow as tf
+#import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-# x = tf.placeholder(shape=[None, 2], dtype=tf.float32)
 from tensorflow.keras import backend
 from tensorflow.python.framework import ops
 from copy import deepcopy
@@ -213,7 +213,7 @@ def train_task_sequence(model, sess, args):
             total_train_examples = task_train_images.shape[0]
             # Randomly suffle the training examples
             perm = np.arange(total_train_examples)
-            np.random.shuffle(perm)
+            np.random.shuffle(list(perm))
             train_x = task_train_images[perm][:args.examples_per_task]
             train_y = task_train_labels[perm][:args.examples_per_task]
             task_sample_weights = task_sample_weights[perm][:args.examples_per_task]
@@ -511,15 +511,12 @@ def main():
     acc_std = dict()
 
     # Reset the default graph
-    # from tensorflow.python.framework import ops
     ops.reset_default_graph()
-
-    #tf.reset_default_graph()
     graph  = tf.Graph()
     with graph.as_default():
 
         # Set the random seed
-        tf.random.set_random_seed(args.random_seed)
+        tf.set_random_seed(args.random_seed)
 
         # Define Input and Output of the model
         x = tf.placeholder(tf.float32, shape=[None, INPUT_FEATURE_SIZE])
@@ -585,3 +582,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
