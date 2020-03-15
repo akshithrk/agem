@@ -7,7 +7,7 @@
 Training script for permute MNIST experiment.
 """
 from __future__ import print_function
-
+from tensorflow.python.framework import ops
 import argparse
 import os
 import sys
@@ -16,7 +16,10 @@ import time
 
 import datetime
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v2 as tf
+tf.disable_v2_behavior()
+
 from copy import deepcopy
 from six.moves import cPickle as pickle
 
@@ -506,12 +509,15 @@ def main():
     acc_std = dict()
 
     # Reset the default graph
-    tf.reset_default_graph()
+    # from tensorflow.python.framework import ops
+    ops.reset_default_graph()
+
+    #tf.reset_default_graph()
     graph  = tf.Graph()
     with graph.as_default():
 
         # Set the random seed
-        tf.set_random_seed(args.random_seed)
+        tf.random.set_random_seed(args.random_seed)
 
         # Define Input and Output of the model
         x = tf.placeholder(tf.float32, shape=[None, INPUT_FEATURE_SIZE])
