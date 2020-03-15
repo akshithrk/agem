@@ -12,8 +12,10 @@ import sys
 from copy import deepcopy
 
 import tensorflow as tf
-import input_data
-import mnist
+import tensorflow_datasets
+
+# import input_data
+# import mnist
 
 from six.moves.urllib.request import urlretrieve
 from six.moves import cPickle as pickle
@@ -654,7 +656,8 @@ def construct_permute_mnist(num_tasks):
         dataset     A permutted mnist dataset
     """
     # Download and store mnist dataset
-    mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
+    mnist = tensorflow_datasets.load('mnist')
+    # input_data.read_data_sets('MNIST_data', one_hot=True)
 
     datasets = []
 

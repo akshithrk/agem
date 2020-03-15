@@ -6,20 +6,22 @@
 """
 Training script for permute MNIST experiment.
 """
-from tensorflow.python.framework import ops
+from __future__ import print_function
 import argparse
 import os
 import sys
 import math
 import time
+import keras
 
 import datetime
 import numpy as np
 # import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-from __future__ import print_function
-
+# x = tf.placeholder(shape=[None, 2], dtype=tf.float32)
+from tensorflow.keras import backend
+from tensorflow.python.framework import ops
 from copy import deepcopy
 from six.moves import cPickle as pickle
 
