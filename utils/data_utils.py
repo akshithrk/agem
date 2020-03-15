@@ -13,9 +13,7 @@ from copy import deepcopy
 
 import tensorflow as tf
 import tensorflow_datasets
-
-# import input_data
-# import mnist
+#from tensorflow.examples.tutorials.mnist import input_data
 
 from six.moves.urllib.request import urlretrieve
 from six.moves import cPickle as pickle
@@ -221,7 +219,7 @@ def construct_split_awa(task_labels, data_dir, train_list_file, val_list_file, t
         datasets.append(awa)
 
     if attr_file:
-        return datasets, awa_attr
+        return datasets, awa_attr 
     else:
         return datasets
 
@@ -362,7 +360,7 @@ def construct_split_cub(task_labels, data_dir, train_list_file, test_list_file, 
         datasets.append(cub)
 
     if attr_file:
-        return datasets, cub_attr
+        return datasets, cub_attr 
     else:
         return datasets
 
@@ -432,7 +430,7 @@ def construct_split_cifar(task_labels, is_cifar_100=True):
 
         cifar = {
             'train': train,
-            'validation': validation,
+            'validation': validation, 
             'test': test,
         }
 
@@ -478,7 +476,7 @@ def _get_cifar(data_dir, is_cifar_100):
         f = open(data_dir + CIFAR_100_DIR + '/train', 'rb')
         datadict = pickle.load(f)
         f.close()
-
+    
         _X = datadict['data']
         _Y = np.array(datadict['fine_labels'])
         _Y = dense_to_one_hot(_Y, num_classes=100)
@@ -486,7 +484,7 @@ def _get_cifar(data_dir, is_cifar_100):
         _X = np.array(_X, dtype=float) / 255.0
         _X = _X.reshape([-1, 3, 32, 32])
         _X = _X.transpose([0, 2, 3, 1])
-
+    
         # Compute the data mean for normalization
         x_train_mean = np.mean(_X, axis=0)
 
@@ -496,31 +494,31 @@ def _get_cifar(data_dir, is_cifar_100):
         x_validation = _X[40000:]
         y_validation = _Y[40000:]
     else:
-        # Load all the training batches of the CIFAR-10
-        for i in range(5):
+    	# Load all the training batches of the CIFAR-10
+    	for i in range(5):
             f = open(data_dir + CIFAR_10_DIR + '/data_batch_' + str(i + 1), 'rb')
             datadict = pickle.load(f)
             f.close()
-
+            
             _X = datadict['data']
             _Y = np.array(datadict['labels'])
             _Y = dense_to_one_hot(_Y, num_classes=10)
-
+            
             _X = np.array(_X, dtype=float) / 255.0
             _X = _X.reshape([-1, 3, 32, 32])
             _X = _X.transpose([0, 2, 3, 1])
-
+            
             if x_train is None:
                 x_train = _X
                 y_train = _Y
             else:
-                x_train = np.concatenate((x_train, _X), axis=0)
-                y_train = np.concatenate((y_train, _Y), axis=0)
-
+            	x_train = np.concatenate((x_train, _X), axis=0)
+            	y_train = np.concatenate((y_train, _Y), axis=0)
+    
         # Compute the data mean for normalization
-        x_train_mean = np.mean(x_train, axis=0)
-        x_validation = x_train[:40000] # We don't use validation set with CIFAR-10
-        y_validation = y_train[40000:]
+            x_train_mean = np.mean(x_train, axis=0)
+            x_validation = x_train[:40000] # We don't use validation set with CIFAR-10
+            y_validation = y_train[40000:]
 
     # Normalize the train and validation sets
     x_train -= x_train_mean
@@ -539,7 +537,7 @@ def _get_cifar(data_dir, is_cifar_100):
         f = open(data_dir + CIFAR_100_DIR + '/test', 'rb')
         datadict = pickle.load(f)
         f.close()
-
+    
         _X = datadict['data']
         _Y = np.array(datadict['fine_labels'])
         _Y = dense_to_one_hot(_Y, num_classes=100)
@@ -657,21 +655,19 @@ def construct_permute_mnist(num_tasks):
     """
     # Download and store mnist dataset
     mnist = tensorflow_datasets.load('mnist')
-    # input_data.read_data_sets('MNIST_data', one_hot=True)
 
     datasets = []
 
     for i in range(num_tasks):
         perm_inds = range(mnist.train.images.shape[1])
         np.random.shuffle(list(perm_inds))
-
         copied_mnist = deepcopy(mnist)
         sets = ["train", "validation", "test"]
         for set_name in sets:
             this_set = getattr(copied_mnist, set_name) # shallow copy
             this_set._images = np.transpose(np.array([this_set.images[:,c] for c in perm_inds]))
             if set_name == "train":
-                train = {
+                train = { 
                     'images':this_set._images,
                     'labels':this_set.labels,
                 }
@@ -898,3 +894,4 @@ def _load_imagenet(data_dir):
 
 
     return dataset
+
